@@ -1,14 +1,15 @@
 import { combineReducers, Reducer } from 'redux';
-// const persistState = require('redux-localstorage');
+import { todoReducer, ITodoState } from './todo.reducer';
+const persistState = require('redux-localstorage');
 
 export class IAppState {
-
+  todos: ITodoState[];
 };
 
 export const rootReducer = <Reducer<IAppState>>combineReducers<IAppState>({
-
+  todos: todoReducer
 });
 
 export const enhancers = [
-  // persistState('counter', { key: 'ng2-redux/examples/counter' })
+  persistState('todos', { key: 'angular2-redux-todo' })
 ];

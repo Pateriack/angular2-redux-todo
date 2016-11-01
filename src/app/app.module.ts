@@ -26,7 +26,7 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 })
 export class AppModule {
   constructor(public appRef: ApplicationRef, private ngRedux: NgRedux<IAppState>) {
-    ngRedux.configureStore(rootReducer, {}, [ createLogger() ]);
+    ngRedux.configureStore(rootReducer, {todos: [{text: 'TEST', complete: false}]}, [ createLogger() ]);
   }
   hmrOnInit(store) {
     console.log('HMR store', store);
