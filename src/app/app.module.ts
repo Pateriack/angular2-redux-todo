@@ -2,12 +2,11 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgReduxModule, NgRedux, DevToolsExtension } from 'ng2-redux';
-import * as createLogger from 'redux-logger';
 
 import { AppComponent } from './app.component';
 import { TodoHeaderComponent, TodoListComponent, TodoFooterComponent } from '../components';
 import { TodoActions } from '../actions';
-import { IAppState, rootReducer, enhancers } from '../store';
+import { IAppState, rootReducer, middleware, enhancers } from '../store';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
@@ -38,7 +37,7 @@ export class AppModule {
     ngRedux.configureStore(
       rootReducer,
       <IAppState>{},
-      [ createLogger() ],
+      middleware,
       [...enhancers, devTool.isEnabled() ? devTool.enhancer() : f => f]);
   }
 
