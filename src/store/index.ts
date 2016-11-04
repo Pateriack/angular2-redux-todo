@@ -1,6 +1,8 @@
 import { combineReducers, Reducer } from 'redux';
-import { todoReducer, ITodoList } from './todo.reducer';
+import { List } from 'immutable';
 const persistState = require('redux-localstorage');
+
+import { todoReducer, ITodoList, ITodo } from './todo.reducer';
 
 export class IAppState {
   todos?: ITodoList;
@@ -13,5 +15,16 @@ export const rootReducer = <Reducer<IAppState>>combineReducers<IAppState>({
 });
 
 export const enhancers = [
-  persistState('todos', { key: 'angular2-redux-todo' })
+  persistState('todos', {
+    key: 'angular2-redux-todo',
+    serialize: (store) => {
+      return store && store.todos ?
+        JSON.stringify(store.todos.toJS()) : store;
+    },
+    deserialize: (state) => {
+      return <IAppState>({
+        todos: List<ITodo>(state ? JSON.parse(state) : [])
+      });
+    }
+  })
 ];
