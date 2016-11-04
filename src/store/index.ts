@@ -1,10 +1,12 @@
 import { combineReducers, Reducer } from 'redux';
-import { todoReducer, ITodoState } from './todo.reducer';
+import { todoReducer, ITodoList } from './todo.reducer';
 const persistState = require('redux-localstorage');
 
 export class IAppState {
-  todos: ITodoState[];
+  todos?: ITodoList;
 };
+
+export * from './todo.reducer';
 
 export const rootReducer = <Reducer<IAppState>>combineReducers<IAppState>({
   todos: todoReducer

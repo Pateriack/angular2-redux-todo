@@ -1,0 +1,4 @@
+<h1>todos</h1>
+<form (submit)="newTodo.emit(text.value); text.value = ''" class="todo-form">
+  <input #text class="new-todo" placeholder="What needs to be done?" autofocus="">
+</form>

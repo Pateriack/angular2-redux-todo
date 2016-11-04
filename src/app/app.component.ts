@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { select } from 'ng2-redux';
+import { Observable } from 'rxjs';
+
+import { TodoActions } from '../actions';
+import { ITodo } from '../store';
 
 import '../style/app.scss';
 
@@ -8,6 +13,7 @@ import '../style/app.scss';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor() {
-  }
+  @select() todos$: Observable<ITodo>
+
+  constructor(public todoActions: TodoActions) {}
 }

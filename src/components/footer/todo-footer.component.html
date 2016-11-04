@@ -1,0 +1,8 @@
+<footer class="footer">
+  <span class="todo-count"><strong>{{getNumberIncomplete()}}</strong> item left</span>
+  <button
+    class="clear-completed"
+    (click)="clearComplete.emit()"
+    *ngIf="getNumberComplete() > 0"
+  >Clear completed</button>
+</footer>

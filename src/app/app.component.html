@@ -1,9 +1,16 @@
-<main>
-  <h1>Hello!</h1>
-
-  <!-- Images (and assets) are parsed and loaded from within the public directory -->
-  <img src="/img/angular.png">
-
-
-
-</main>
+<section class="todoapp">
+  <todo-header (newTodo)="todoActions.newTodo($event)"></todo-header>
+  <todo-list
+    [todos]="todos$ | async"
+    (toggleTodo)="todoActions.toggleTodo($event)"
+    (destroyTodo)="todoActions.destroyTodo($event)"
+    (toggleAll)="todoActions.toggleAll($event)"
+  ></todo-list>
+  <todo-footer
+    [todos]="todos$ | async"
+    (clearComplete)="todoActions.clearCompleted()"
+  ></todo-footer>
+</section>
+<footer class="info">
+  <p>Double-click to edit a todo</p>
+</footer>
