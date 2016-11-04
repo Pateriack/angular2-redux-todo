@@ -5,8 +5,9 @@ import { NgReduxModule, NgRedux, DevToolsExtension } from 'ng2-redux';
 
 import { AppComponent } from './app.component';
 import { TodoHeaderComponent, TodoListComponent, TodoFooterComponent } from '../components';
+import { TodoService } from '../services';
 import { TodoActions } from '../actions';
-import { IAppState, rootReducer, middleware, enhancers } from '../store';
+import { IAppState, rootReducer, middleware, enhancers, reimmutify } from '../store';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
@@ -23,6 +24,7 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
     TodoFooterComponent
   ],
   providers: [
+    TodoService,
     TodoActions,
     DevToolsExtension
   ],
@@ -34,11 +36,14 @@ export class AppModule {
     private ngRedux: NgRedux<IAppState>,
     private devTool: DevToolsExtension) {
 
+    const tools = devTool.enhancer({
+      deserializeState: reimmutify
+    });
     ngRedux.configureStore(
       rootReducer,
       <IAppState>{},
       middleware,
-      [...enhancers, devTool.isEnabled() ? devTool.enhancer() : f => f]);
+      tools ? [...enhancers, tools ] : enhancers);
   }
 
   hmrOnInit(store) {

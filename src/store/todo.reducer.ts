@@ -10,45 +10,50 @@ export interface ITodo {
 
 export type ITodoList = List<ITodo>;
 
+export const TodoRecord = Record({
+  id: 0,
+  text: '',
+  completed: false
+});
+
 const INITIAL_STATE = List<ITodo>();
 
-export function todoReducer(state: ITodoList = INITIAL_STATE, action): ITodoList {
-
-  console.log(state);
+export function todoReducer(state: ITodoList = INITIAL_STATE, action){
 
   switch (action.type) {
     case TodoActions.NEW_TODO:
-      return List<ITodo>(state.push(action.payload).map((todo: ITodo, index) => {
-        todo.id = index;
-        return todo;
-      }));
+      return state.push(TodoRecord(action.payload));
 
     case TodoActions.TOGGLE_TODO:
-      return state.update(action.payload.id, (todo: ITodo) => {
-        todo.completed = !todo.completed;
-        return todo;
-      });
+      let index = findIndex(state, action.payload.id);
+      return state.setIn([index, 'completed'], !state.getIn([index, 'completed']));
 
     case TodoActions.DESTROY_TODO:
-      return List<ITodo>(state.filter((todo: ITodo) => todo.id !== action.payload.id).map((todo: ITodo, index) => {
-        todo.id = index;
-        return todo;
-      }));
+      return state.filter((todo: ITodo) => todo.id !== action.payload.id);
 
     case TodoActions.TOGGLE_ALL:
-      return List<ITodo>(state.map((todo: ITodo) => {
-        todo.completed = action.payload.completed;
-        return todo;
-      }));
+      return List<ITodo>(state.map(todo => todo.set('completed', action.payload.completed));
 
     case TodoActions.CLEAR_COMPLETED:
-      return List<ITodo>(state.filter((todo: ITodo) => !todo.completed).map((todo: ITodo, index) => {
-        todo.id = index;
-        return todo;
-      }));
+      return state.filter(todo => !todo.get('completed'));
 
     default:
       return state;
   }
 
 }
+
+export function reimmutifyTodoList(plain): ITodoList {
+  return List<ITodo>(plain ? plain.map(reimmutifyTodo) : []);
+}
+
+function reimmutifyTodo(todo) {
+  return TodoRecord(
+    Object.assign({}, todo)
+  );
+}
+
+function findIndex(collection, id) {
+  return collection.findIndex(n => n.get('id') === id);
+}
+

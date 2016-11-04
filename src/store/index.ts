@@ -3,7 +3,7 @@ import { List } from 'immutable';
 import * as createLogger from 'redux-logger';
 const persistState = require('redux-localstorage');
 
-import { todoReducer, ITodoList, ITodo } from './todo.reducer';
+import { todoReducer, ITodoList, ITodo, reimmutifyTodoList } from './todo.reducer';
 
 export class IAppState {
   todos?: ITodoList;
@@ -29,17 +29,16 @@ export function deimmutify(state: IAppState): Object {
   }
 }
 
+export function reimmutify(plain) {
+  return plain ? {
+    todos: reimmutifyTodoList(plain.todos)
+  } : {};
+}
+
 export const enhancers = [
-  persistState('todos', {
+  persistState('', {
     key: 'angular2-redux-todo',
-    serialize: (store) => {
-      return store && store.todos ?
-        JSON.stringify(store.todos.toJS()) : store;
-    },
-    deserialize: (state) => {
-      return <IAppState>({
-        todos: List<ITodo>(state ? JSON.parse(state) : [])
-      });
-    }
+    serialize: s => JSON.stringify(deimmutify(s)),
+    deserialize: s => reimmutify(JSON.parse(s)),
   })
 ];
